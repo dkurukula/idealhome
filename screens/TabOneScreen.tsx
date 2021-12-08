@@ -3,6 +3,7 @@ import { useState} from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import {Input, PricingCard} from 'react-native-elements'
 import {format} from 'd3-format'
+import CurrencyInput from 'react-currency-input-field'
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -19,10 +20,10 @@ interface listing {
 }
 
 const initialListing:listing = {
-  purchasePrice: 0,
+  purchasePrice: 888000,
   propertyTax: 0,
   maintFee: 0,
-  sqft: 0,
+  sqft: 800,
   notIncludedExpense:0,
   monthlyCostOfOwnership:0,
   downPaymentPercent:20,
@@ -32,7 +33,7 @@ const initialListing:listing = {
 const fmtMoney= format("$,")
 const pricePerSqft = (purchasePrice:number, sqft:number):string => {
   const ppsft = Math.round(purchasePrice/sqft)
-  return (!((sqft && ppsft) >0) || !ppsft || !sqft ? "-" : `$${ppsft}`)
+  return (!((sqft && ppsft) >0) || !ppsft || !sqft ? "$0" : fmtMoney(ppsft))
 }
 
 const downPaymentAmount = (purchasePrice:number, downPaymentPercent:number) => {
@@ -54,21 +55,52 @@ const TabOneScreen = ({ navigation }: RootTabScreenProps<'TabOne'>) => {
       <Text style={styles.body}>My catalogue</Text>
       <Text>{JSON.stringify(listing)}</Text>
 
-      <Input
-    placeholder="Purchase Price"
-    onChangeText={value=> setListing({...listing, purchasePrice: +value})}
-      />
+      <View style={styles.flexContainer}>
+      <View style={styles.row}>
+      <Text style={styles.inputTextLabel}> Purchase Price</Text>
+      <CurrencyInput
 
-      <Input
-    placeholder="Square Footage"
-    onChangeText={value => setListing({...listing, sqft: +value})}
+    placeholder="$888,000"
+    onValueChange ={(value) => value && setListing({...listing, purchasePrice: +value})}
+    allowDecimals={false}
+    prefix={"$"}
+    step={1000}
+
       />
+      </View>
+      </View>
 
 
-      <Input
-    placeholder="Down Payment %"
-    onChangeText={value => setListing({...listing, downPaymentPercent: +value})}
+      <View style={styles.flexContainer}>
+      <View style={styles.row}>
+      <Text style={styles.inputTextLabel}>Square Footage</Text>
+      <CurrencyInput
+
+    placeholder="800sqft"
+    onValueChange={value => value && setListing({...listing, sqft: +value})}
+    allowDecimals={false}
+    suffix={"sqft"}
+    step={5}
+
       />
+      </View>
+      </View>
+
+
+      <View style={styles.flexContainer}>
+      <View style={styles.row}>
+      <Text style={styles.inputTextLabel}>Down Payment</Text>
+      <CurrencyInput
+
+    placeholder="20%"
+    onValueChange = {value => value && setListing({...listing, downPaymentPercent: +value})}
+    allowDecimals={true}
+    suffix={"%"}
+    step={1}
+
+      />
+      </View>
+      </View>
 
     <Text>Price per Sqft</Text>
     <Text>{pricePerSqft(+listing.purchasePrice,+listing.sqft)}</Text>
@@ -97,6 +129,9 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 16,
   },
+  flexContainer: {flex:1, padding:10},
+  row: {flexDirection:"row", flexWrap:"wrap"},
+  inputTextLabel:{padding:10},
   separator: {
     marginVertical: 30,
     height: 1,
