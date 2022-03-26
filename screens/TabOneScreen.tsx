@@ -3,8 +3,6 @@ import { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Input, PricingCard } from "react-native-elements";
 import { format } from "d3-format";
-import CurrencyInput from "react-currency-input-field";
-
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 
@@ -57,14 +55,12 @@ const TabOneScreen = ({ navigation }: RootTabScreenProps<"TabOne">) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.title}>Potential homes</Text>
+        <Text style={styles.title}>Evaluate Potential Home</Text>
         <View
           style={styles.separator}
           lightColor="#eee"
           darkColor="rgba(255,255,255,0.1)"
         />
-        <Text style={styles.body}>My catalogue</Text>
-        <Text>{JSON.stringify(listing)}</Text>
 
         <View style={styles.flexContainer}>
           <View style={styles.row}>
