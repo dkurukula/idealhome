@@ -30,8 +30,13 @@ const initialListing: listing = {
   downPaymentAmount: 0
 };
 
+interface resultType {
+  label: string;
+  result: number;
+}
+
 const fmtMoney = format("$,");
-const pricePerSqft = (purchasePrice: number, sqft: number): string => {
+const pricePerSqft = (purchasePrice: number, sqft: number) => {
   const ppsft = Math.round(purchasePrice / sqft);
   return !((sqft && ppsft) > 0) || !ppsft || !sqft ? "$0" : fmtMoney(ppsft);
 };
@@ -63,68 +68,75 @@ const TabOneScreen = ({ navigation }: RootTabScreenProps<"TabOne">) => {
 
         <View style={styles.flexContainer}>
           <View style={styles.row}>
-            <Text style={styles.inputTextLabel}> Purchase Price</Text>
-            <CurrencyInput
+            <Input
+              label="Purchase Price"
               placeholder="$888,000"
-              onValueChange={value =>
+              onChangeText={value =>
                 value && setListing({ ...listing, purchasePrice: +value })
               }
-              allowDecimals={false}
-              prefix={"$"}
-              step={1000}
             />
           </View>
         </View>
 
         <View style={styles.flexContainer}>
           <View style={styles.row}>
-            <Text style={styles.inputTextLabel}>Square Footage</Text>
-            <CurrencyInput
+            <Input
+              label="Square Footage"
               placeholder="800sqft"
-              onValueChange={value =>
+              onChangeText={value =>
                 value && setListing({ ...listing, sqft: +value })
               }
-              allowDecimals={false}
-              suffix={"sqft"}
-              step={5}
             />
           </View>
         </View>
 
         <View style={styles.flexContainer}>
           <View style={styles.row}>
-            <Text style={styles.inputTextLabel}>Down Payment</Text>
-            <CurrencyInput
+            <Input
+              label="Down Payment"
               placeholder="20%"
-              onValueChange={value =>
+              onChangeText={value =>
                 value && setListing({ ...listing, downPaymentPercent: +value })
               }
-              allowDecimals={true}
-              suffix={"%"}
-              step={1}
             />
           </View>
         </View>
 
-        <Text>Price per Sqft</Text>
-        <Text>{pricePerSqft(+listing.purchasePrice, +listing.sqft)}</Text>
+        <View style={styles.resultGroupContainer}>
+          <Result
+            label="Price per Sqft"
+            result={pricePerSqft(+listing.purchasePrice, +listing.sqft)}
+          />
 
-        <Text>Down Payment</Text>
-        <Text>
-          {downPaymentAmount(
-            +listing.purchasePrice,
-            +listing.downPaymentPercent
-          )}
-        </Text>
+          <Result
+            label="Down Payment"
+            result={downPaymentAmount(
+              +listing.purchasePrice,
+              +listing.downPaymentPercent
+            )}
+          />
 
-        <Text>Loan Value</Text>
-        <Text>
-          {loanValue(+listing.purchasePrice, +listing.downPaymentPercent)}
-        </Text>
+          <Result
+            label="Loan Value"
+            result={loanValue(
+              +listing.purchasePrice,
+              +listing.downPaymentPercent
+            )}
+          />
+        </View>
       </View>
     </ScrollView>
   );
 };
+
+function Result(props: resultType) {
+  return (
+    <View style={styles.resultContainer}>
+      <Text style={styles.resultLabel}>{props.label}: </Text>
+      <Text style={styles.result}>{props.result}</Text>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -134,14 +146,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    paddingTop: 20
   },
   body: {
     fontSize: 16
   },
+  resultGroupContainer: { flex: 1 },
+  resultContainer: { flex: 1, flexDirection: "row", padding: 5 },
+  resultLabel: { fontSize: 18 },
+  result: { fontSize: 20, paddingHorizontal: 5 },
+  inputText: { color: "#FEFEFE" },
   flexContainer: { flex: 1, padding: 10 },
   row: { flexDirection: "row", flexWrap: "wrap" },
-  inputTextLabel: { padding: 10 },
   separator: {
     marginVertical: 30,
     height: 1,
