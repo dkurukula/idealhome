@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
-import { Input, PricingCard } from "react-native-elements";
 import { format } from "d3-format";
-import { Text, View } from "../components/Themed";
+import { Text, View, Input } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 
 interface listing {
@@ -70,6 +69,8 @@ const TabOneScreen = ({ navigation }: RootTabScreenProps<"TabOne">) => {
               onChangeText={value =>
                 value && setListing({ ...listing, purchasePrice: +value })
               }
+              darkColor="#eee"
+              lightColor="rgba(255,255,255,0.1)"
             />
           </View>
         </View>
@@ -82,6 +83,8 @@ const TabOneScreen = ({ navigation }: RootTabScreenProps<"TabOne">) => {
               onChangeText={value =>
                 value && setListing({ ...listing, sqft: +value })
               }
+              darkColor="#eee"
+              lightColor="rgba(255,255,255,0.1)"
             />
           </View>
         </View>
@@ -94,6 +97,8 @@ const TabOneScreen = ({ navigation }: RootTabScreenProps<"TabOne">) => {
               onChangeText={value =>
                 value && setListing({ ...listing, downPaymentPercent: +value })
               }
+              darkColor="#eee"
+              lightColor="rgba(255,255,255,0.1)"
             />
           </View>
         </View>
@@ -152,7 +157,6 @@ const styles = StyleSheet.create({
   resultContainer: { flex: 1, flexDirection: "row", padding: 5 },
   resultLabel: { fontSize: 18 },
   result: { fontSize: 20, paddingHorizontal: 5 },
-  inputText: { color: "#FEFEFE" },
   flexContainer: { flex: 1, padding: 10 },
   row: { flexDirection: "row", flexWrap: "wrap" },
   separator: {
